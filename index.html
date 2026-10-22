@@ -481,6 +481,10 @@ const NINOS = [];
 const GALERIA = ["", "", "", "", ""];
 const shuffle = a => { a = [...a]; for (let i = a.length-1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; };
 /* carga diferida real: la portada del carrusel se baja recién cuando está por verse en pantalla */
+/* si una portada no existe (todavia no se subio), se muestra el nombre del juego en vez de la imagen rota */
+document.addEventListener("error", e => { const i = e.target; if (!i || i.tagName !== "IMG") return; const box = i.closest(".cv,.cov,.gc"); if (!box) return;
+  const name = (box.closest("[aria-label]") && box.closest("[aria-label]").getAttribute("aria-label")) || box.dataset.cg || i.alt || "";
+  i.remove(); box.classList.remove("im"); if (!box.classList.contains("cov")) box.textContent = name; }, true);
 const lzIO = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ const i = e.target; i.src = i.dataset.lz; lzIO.unobserve(i); } }), { rootMargin:"0px 80px" }) : null;
 const lazyImgs = () => document.querySelectorAll("img[data-lz]:not([src])").forEach(i => lzIO ? lzIO.observe(i) : (i.src = i.dataset.lz));
 const xsU = p => p.replace("imagenes/","imagenes/xs/");
